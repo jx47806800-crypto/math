@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<style>
+		body {
+		text-align: center;
+		color: #555555;
+		font-family: Arial;
+		}
+
+		h1 {
+			font-size: 4rem;
+		}
+
+		.gameover {
+			color: #ec6d67;
+			display: none;
+		}
+
+		#bar {
+			width: 100%;
+			height: 10px;
+			background-color: #f1c40f;
+			margin-bottom: 60px;
+		}
+
+		button {
+			padding: .5rem 1.5rem;
+			font-size: 2rem;
+			font-weight: bold;
+			outline: none;
+			cursor: pointer;
+			background-color: white;
+			border-radius: 5px;
+		}
+
+		.btn-yes {
+			color: #2cbeff;
+			border: 3px solid #2cbeff;
+		}
+
+		.btn-yes:hover {
+			color: #fff;
+			background-color: #2cbeff;
+		}
+
+		.btn-no {
+			color: #ec6d67;
+			border: 3px solid #ec6d67;
+		}
+
+		.btn-no:hover {
+			color: #fff;
+			background-color: #ec6d67;
+		}
+	</style>
+</head>
+<body>
+    <div id="bar"></div>
+    <h2 class="level js-level"> Level: ? </h2>
+    <h1 class="js-formula">? + ? = ?</h1>
+    <button class="btn-yes js-yes">O</button>
+    <button class="btn-no js-no">X</button>
+    <h2 class="gameover js-gameover">GameOver</h2>
+	<script>
+		var level = 0;
+		var correct = true;
+		var timer = 0;
+		start();
+		function start() {
+			level ++;
+			$("#level").text("level: " + level);
+			var a = Math.floor(Math.random() * 10);
+			var b = Math.floor(Math.random() * 10);
+			var ans = a + b;
+			correct = Math.random() > 0.5;
+			if (!correct) {
+				ans = Math.ceil(Math.random() * 5);
+			}
+			$("#formula").text(a + " + " + b + " = " + ans);
+			timer = 0;
+		}
+		function gameover(){
+			$("button").hide();
+			$("#gameover").show();  
+			clearInterval(id);
+		}
+		$("#btn-yes").click(function(){
+			if(correct){
+				start();
+			}else{
+				gameover();
+			}
+		});
+		$("#btn-no").click(function(){
+			if(!correct){
+				start();
+			}else{
+				gameover();
+			}
+		});
+		var id = setInterval(function(){
+			timer += 0.1;
+			$("#bar").css("width", timer + "%");
+			if (timer > 100){
+				gameover();
+			}
+		});
+	</script>
+</body>
+</html>
