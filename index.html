@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Document</title>
+    <meta charset="UTF-8">
+    <title>Math Game</title>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<style>
 		body {
-		text-align: center;
-		color: #555555;
-		font-family: Arial;
+			text-align: center;
+			color: #555555;
+			font-family: Arial;
 		}
 
 		h1 {
@@ -20,7 +21,7 @@
 		}
 
 		#bar {
-			width: 100%;
+			width: 0%; /* 初始從 0% 開始 */
 			height: 10px;
 			background-color: #f1c40f;
 			margin-bottom: 60px;
@@ -59,34 +60,42 @@
 </head>
 <body>
     <div id="bar"></div>
-    <h2 class="level js-level"> Level: ? </h2>
-    <h1 class="js-formula">? + ? = ?</h1>
-    <button class="btn-yes js-yes">O</button>
-    <button class="btn-no js-no">X</button>
-    <h2 class="gameover js-gameover">GameOver</h2>
+    <!-- 修正：將 class 改為 id，讓 JS 抓得到 -->
+    <h2 id="level"> Level: ? </h2>
+    <h1 id="formula">? + ? = ?</h1>
+    <button id="btn-yes" class="btn-yes">O</button>
+    <button id="btn-no" class="btn-no">X</button>
+    <h2 id="gameover" class="gameover">GameOver</h2>
+
 	<script>
 		var level = 0;
 		var correct = true;
 		var timer = 0;
+		var id; // 將定時器變數宣告在外層
+
 		start();
+
 		function start() {
-			level ++;
-			$("#level").text("level: " + level);
+			level++;
+			$("#level").text("Level: " + level);
 			var a = Math.floor(Math.random() * 10);
 			var b = Math.floor(Math.random() * 10);
 			var ans = a + b;
 			correct = Math.random() > 0.5;
 			if (!correct) {
-				ans = Math.ceil(Math.random() * 5);
+				// 確保錯誤答案不會剛好等於正確答案
+				ans = ans + Math.ceil(Math.random() * 5);
 			}
 			$("#formula").text(a + " + " + b + " = " + ans);
 			timer = 0;
 		}
+
 		function gameover(){
 			$("button").hide();
 			$("#gameover").show();  
 			clearInterval(id);
 		}
+
 		$("#btn-yes").click(function(){
 			if(correct){
 				start();
@@ -94,6 +103,7 @@
 				gameover();
 			}
 		});
+
 		$("#btn-no").click(function(){
 			if(!correct){
 				start();
@@ -101,13 +111,15 @@
 				gameover();
 			}
 		});
-		var id = setInterval(function(){
-			timer += 0.1;
+
+		// 修正：計時器時間間隔調整為 10 毫秒，條狀圖才會平滑增加
+		id = setInterval(function(){
+			timer += 0.5; 
 			$("#bar").css("width", timer + "%");
 			if (timer > 100){
 				gameover();
 			}
-		});
+		}, 10);
 	</script>
 </body>
 </html>
